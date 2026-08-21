@@ -22,6 +22,10 @@ footer { display: flex; justify-content: space-between; padding: 22px 0 28px; bo
 @media (max-width: 700px) { .game-shell { padding: 0 21px; } nav { height: 76px; }.nav-note { display: none; }.game-area, .result-page { padding: 45px 0 55px; }.game-header { align-items: start; margin-bottom: 30px; }.game-header .intro { font-size: .9rem; }.progress { padding-top: 6px; }.progress strong { font-size: 2rem; }.question-card { padding: 25px 18px 27px; }.question-card h2 { font-size: 1.5rem; }.color-grid { grid-template-columns: repeat(4, 1fr); gap: 20px 8px; }.color-circle { width: min(17vw, 61px); }.action-row, .feedback { align-items: stretch; flex-direction: column; }.action-row { gap: 15px; }.primary-button { width: 100%; }.feedback p { margin-bottom: 15px; }.answer-row { grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; }.mini-palette { grid-column: 2; }.match-count { grid-column: 3; grid-row: 1; }.answer-copy p { font-size: .7rem; } footer { line-height: 1.8; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
 
+.scene-visual.visual-type .visual-main span:nth-child(1) { left: 0; bottom: 0; width: 48%; height: 53%; background: #d9d9d0; transform: none; }
+.scene-visual.visual-type .visual-main span:nth-child(2) { left: 50%; bottom: 0; width: 50%; height: 34%; background: #7fa8ac; transform: none; }
+.scene-visual.visual-type .visual-main span:nth-child(3) { left: 74%; top: 58%; width: 16%; height: 8%; background: #d17c68; transform: rotate(-8deg); }
+
 /* The four rounds deliberately use four different editorial structures. */
 .scene-visual .visual-texture { position: absolute; display: flex; gap: 6px; right: 24px; bottom: 20px; width: 110px; height: 70px; padding: 8px; border: 1px solid rgba(38,55,67,.25); transform: rotate(3deg); }
 .visual-scene .visual-texture { background: #f5f0df; }

@@ -47,6 +47,7 @@ const submitted = ref(false)
 const finished = ref(false)
 const currentQuestion = computed(() => questions[questionIndex.value])
 const currentResult = computed(() => results.value[questionIndex.value])
+const answerColors = computed(() => currentQuestion.value.answer.map((id) => currentQuestion.value.options.find((option) => option.id === id)?.hex ?? '#b9bbb5'))
 const score = computed(() => results.value.reduce((total, result) => total + result.matched.length, 0))
 const maxScore = questions.length * 3
 const colorProfile = computed(() => {
@@ -92,14 +93,14 @@ function restartGame() {
       <article class="question-card" :style="{ '--frame-color': currentQuestion.frameColor }">
         <div class="question-meta"><span>{{ currentQuestion.category }}</span><span>選 3 個色塊</span></div>
         <div v-if="submitted" class="scene-visual" :class="`visual-${currentQuestion.layout}`" aria-label="本題解答圖片">
-          <div class="visual-main"><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="visual-main"><span :style="{ backgroundColor: answerColors[0] }"></span><span :style="{ backgroundColor: answerColors[1] }"></span><span :style="{ backgroundColor: answerColors[2] }"></span><span></span><span></span></div>
           <div class="visual-texture"><i></i><i></i><i></i></div>
           <b class="visual-label">{{ String(questionIndex + 1).padStart(2, '0') }}</b>
         </div>
         <h2>{{ currentQuestion.scene }}</h2>
         <p class="frame-hint"><i :style="{ backgroundColor: currentQuestion.frameColor }"></i>{{ currentQuestion.frame }}</p>
         <div class="color-grid" role="group" aria-label="Color choices">
-          <button v-for="(option, optionIndex) in currentQuestion.options" :key="option.id" class="color-choice" :class="{ selected: selected.includes(option.id), correct: submitted && selected.includes(option.id) && currentQuestion.answer.includes(option.id), incorrect: submitted && selected.includes(option.id) && !currentQuestion.answer.includes(option.id), muted: submitted && !selected.includes(option.id) }" type="button" :aria-label="`色塊 ${optionIndex + 1}${selected.includes(option.id) ? (currentQuestion.answer.includes(option.id) ? '，正確' : '，錯誤') : ''}`" :aria-pressed="selected.includes(option.id)" @click="toggleColor(option.id)"><span class="color-circle" :style="{ backgroundColor: option.hex }"><b v-if="selected.includes(option.id)">{{ selected.indexOf(option.id) + 1 }}</b><i v-if="submitted && selected.includes(option.id)" class="answer-mark">{{ currentQuestion.answer.includes(option.id) ? '✓' : '×' }}</i></span></button>
+          <button v-for="(option, optionIndex) in currentQuestion.options" :key="option.id" class="color-choice" :class="{ selected: selected.includes(option.id), correct: submitted && currentQuestion.answer.includes(option.id), incorrect: submitted && selected.includes(option.id) && !currentQuestion.answer.includes(option.id), muted: submitted && !currentQuestion.answer.includes(option.id) && !selected.includes(option.id) }" type="button" :aria-label="`色塊 ${optionIndex + 1}${submitted && currentQuestion.answer.includes(option.id) ? '，正確答案' : selected.includes(option.id) ? '，錯誤' : ''}`" :aria-pressed="selected.includes(option.id)" @click="toggleColor(option.id)"><span class="color-circle" :style="{ backgroundColor: option.hex }"><b v-if="selected.includes(option.id)">{{ selected.indexOf(option.id) + 1 }}</b><i v-if="submitted && (currentQuestion.answer.includes(option.id) || selected.includes(option.id))" class="answer-mark">{{ currentQuestion.answer.includes(option.id) ? '✓' : '×' }}</i></span></button>
         </div>
         <div v-if="!submitted" class="action-row"><span>{{ selected.length }} / 3 selected</span><button class="primary-button" type="button" :disabled="selected.length !== 3" @click="submitAnswer">完成配色 <b>→</b></button></div>
         <div v-else class="feedback" aria-live="polite"><div><strong>{{ currentResult.matched.length }} / 3 個配色方向符合</strong><p>{{ currentQuestion.explanation }}</p></div><button class="primary-button" type="button" @click="nextQuestion">{{ questionIndex === questions.length - 1 ? '查看結果' : '下一題' }} <b>→</b></button></div>
