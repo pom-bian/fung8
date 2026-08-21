@@ -15,28 +15,28 @@ const questions: ColorQuestion[] = [
     options: [
       { id: 'rain-1', name: '霧藍', hex: '#9bb5bd' }, { id: 'rain-2', name: '柏油灰', hex: '#3f4c51' }, { id: 'rain-3', name: '苔綠', hex: '#687b6c' }, { id: 'rain-4', name: '雨傘黃', hex: '#d6ad57' },
       { id: 'rain-5', name: '玻璃白', hex: '#e5ebea' }, { id: 'rain-6', name: '磚紅', hex: '#9c5c50' }, { id: 'rain-7', name: '深夜藍', hex: '#243746' }, { id: 'rain-8', name: '水泥米', hex: '#b4aea0' },
-    ], answer: ['rain-1', 'rain-2', 'rain-5'], explanation: '霧藍與柏油灰延續雨後的濕冷質地，再用玻璃白提亮反光的街面，讓整體安靜但不沉重。',
+    ], answer: ['rain-1', 'rain-2', 'rain-3', 'rain-5', 'rain-8'], explanation: '霧藍、柏油灰與水泥米延續雨後的濕冷質地，苔綠帶入城市邊角的生命感，再用玻璃白提亮反光的街面。',
   },
   {
     scene: '凌晨三點，唯一還亮著的便利商店。', category: '深夜記憶', frame: '以人工光源切開深色夜幕', frameColor: '#273044', layout: 'detail',
     options: [
       { id: 'store-1', name: '螢光綠', hex: '#b8d66c' }, { id: 'store-2', name: '夜幕藍', hex: '#202b43' }, { id: 'store-3', name: '冷白光', hex: '#e8eee7' }, { id: 'store-4', name: '番茄紅', hex: '#c45243' },
       { id: 'store-5', name: '奶茶棕', hex: '#b18d69' }, { id: 'store-6', name: '塑膠橘', hex: '#ed9c4d' }, { id: 'store-7', name: '深紫', hex: '#433c5e' }, { id: 'store-8', name: '薄荷灰', hex: '#9ab3a7' },
-    ], answer: ['store-1', 'store-2', 'store-3'], explanation: '夜幕藍建立凌晨的孤獨感，冷白光是店內不眠的燈，螢光綠則像招牌與貨架上突然跳出的生命力。',
+    ], answer: ['store-1', 'store-2', 'store-3', 'store-6', 'store-8'], explanation: '夜幕藍建立凌晨的孤獨感，冷白光是店內不眠的燈，螢光綠與薄荷灰像招牌和貨架上突然跳出的生命力，塑膠橘補上一點夜裡的暖光。',
   },
   {
     scene: '夏天海邊，一面被曬熱、帶鹽味的老牆。', category: '夏日場景', frame: '以溫暖日照承接海風的清爽', frameColor: '#d9a45b', layout: 'type',
     options: [
       { id: 'wall-1', name: '曬熱黃', hex: '#e4b866' }, { id: 'wall-2', name: '海水藍', hex: '#5da5ad' }, { id: 'wall-3', name: '褪色珊瑚', hex: '#d27865' }, { id: 'wall-4', name: '墨黑', hex: '#282b2c' },
       { id: 'wall-5', name: '葡萄紫', hex: '#72546d' }, { id: 'wall-7', name: '海藻綠', hex: '#557e71' }, { id: 'wall-8', name: '貝殼白', hex: '#f0e5cf' },
-    ], answer: ['wall-1', 'wall-2', 'wall-3'], explanation: '曬熱黃是老牆吸收的陽光，海水藍帶來鹽味與風，褪色珊瑚像牆面留下的夏日痕跡，三者一起有明亮的復古感。',
+    ], answer: ['wall-1', 'wall-2', 'wall-3', 'wall-7', 'wall-8'], explanation: '曬熱黃是直立老牆吸收的陽光，海水藍帶來鹽味與風，褪色珊瑚、海藻綠與貝殼白補上牆面細節，形成明亮的海邊復古感。',
   },
   {
     scene: '復古遊戲第一關，音樂剛響起，冒險還沒有開始。', category: '遊戲想像', frame: '以高對比的像素感喚起童年期待', frameColor: '#392b51', layout: 'pixel',
     options: [
       { id: 'game-1', name: '像素紫', hex: '#7656a2' }, { id: 'game-2', name: '能量青', hex: '#4fc4bb' }, { id: 'game-3', name: '金幣黃', hex: '#edc44d' }, { id: 'game-4', name: '森林綠', hex: '#47704e' },
       { id: 'game-5', name: '灰階白', hex: '#d0d1c7' }, { id: 'game-7', name: '泥土棕', hex: '#866044' }, { id: 'game-8', name: '深海藍', hex: '#274f76' },
-    ], answer: ['game-1', 'game-2', 'game-3'], explanation: '像素紫作為懷舊的背景，能量青帶出遊戲介面的電子感，金幣黃則像第一關裡等待被發現的獎勵。',
+    ], answer: ['game-1', 'game-2', 'game-3', 'game-4', 'game-8'], explanation: '像素紫作為懷舊背景，能量青帶出遊戲介面的電子感，金幣黃像等待被發現的獎勵，森林綠與深海藍補出第一關的探索場景。',
   },
 ]
 
@@ -93,7 +93,7 @@ function restartGame() {
       <article class="question-card" :style="{ '--frame-color': currentQuestion.frameColor }">
         <div class="question-meta"><span>{{ currentQuestion.category }}</span><span>選 3 個色塊</span></div>
         <div v-if="submitted" class="scene-visual" :class="`visual-${currentQuestion.layout}`" aria-label="本題解答圖片">
-          <div class="visual-main"><span :style="{ backgroundColor: answerColors[0] }"></span><span :style="{ backgroundColor: answerColors[1] }"></span><span :style="{ backgroundColor: answerColors[2] }"></span><span></span><span></span></div>
+          <div class="visual-main"><span v-for="color in answerColors" :key="color" :style="{ '--answer-color': color }"></span></div>
         </div>
         <h2>{{ currentQuestion.scene }}</h2>
         <p class="frame-hint"><i :style="{ backgroundColor: currentQuestion.frameColor }"></i>{{ currentQuestion.frame }}</p>
