@@ -28,14 +28,14 @@ const questions: ColorQuestion[] = [
     scene: '夏天海邊，一面被曬熱、帶鹽味的老牆。', category: '夏日場景', frame: '以溫暖日照承接海風的清爽', frameColor: '#d9a45b', layout: 'type',
     options: [
       { id: 'wall-1', name: '曬熱黃', hex: '#e4b866' }, { id: 'wall-2', name: '海水藍', hex: '#5da5ad' }, { id: 'wall-3', name: '褪色珊瑚', hex: '#d27865' }, { id: 'wall-4', name: '墨黑', hex: '#282b2c' },
-      { id: 'wall-5', name: '葡萄紫', hex: '#72546d' }, { id: 'wall-6', name: '水泥灰', hex: '#8e928c' }, { id: 'wall-7', name: '海藻綠', hex: '#557e71' }, { id: 'wall-8', name: '貝殼白', hex: '#f0e5cf' },
+      { id: 'wall-5', name: '葡萄紫', hex: '#72546d' }, { id: 'wall-7', name: '海藻綠', hex: '#557e71' }, { id: 'wall-8', name: '貝殼白', hex: '#f0e5cf' },
     ], answer: ['wall-1', 'wall-2', 'wall-3'], explanation: '曬熱黃是老牆吸收的陽光，海水藍帶來鹽味與風，褪色珊瑚像牆面留下的夏日痕跡，三者一起有明亮的復古感。',
   },
   {
     scene: '復古遊戲第一關，音樂剛響起，冒險還沒有開始。', category: '遊戲想像', frame: '以高對比的像素感喚起童年期待', frameColor: '#392b51', layout: 'pixel',
     options: [
       { id: 'game-1', name: '像素紫', hex: '#7656a2' }, { id: 'game-2', name: '能量青', hex: '#4fc4bb' }, { id: 'game-3', name: '金幣黃', hex: '#edc44d' }, { id: 'game-4', name: '森林綠', hex: '#47704e' },
-      { id: 'game-5', name: '灰階白', hex: '#d0d1c7' }, { id: 'game-6', name: '警報紅', hex: '#df5f4e' }, { id: 'game-7', name: '泥土棕', hex: '#866044' }, { id: 'game-8', name: '深海藍', hex: '#274f76' },
+      { id: 'game-5', name: '灰階白', hex: '#d0d1c7' }, { id: 'game-7', name: '泥土棕', hex: '#866044' }, { id: 'game-8', name: '深海藍', hex: '#274f76' },
     ], answer: ['game-1', 'game-2', 'game-3'], explanation: '像素紫作為懷舊的背景，能量青帶出遊戲介面的電子感，金幣黃則像第一關裡等待被發現的獎勵。',
   },
 ]

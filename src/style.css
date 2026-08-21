@@ -52,6 +52,9 @@ footer { display: flex; justify-content: space-between; padding: 22px 0 28px; bo
 .question-card .scene-visual.visual-type .visual-main span:nth-child(3) { left: 72% !important; top: 16% !important; width: 20% !important; height: 15% !important; transform: none !important; }
 .question-card .scene-visual.visual-pixel .visual-main { inset: 0 !important; display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; align-items: end !important; gap: 8px !important; padding: 22px 14% 18px !important; }
 .question-card .scene-visual.visual-pixel .visual-main span:nth-child(1), .question-card .scene-visual.visual-pixel .visual-main span:nth-child(2), .question-card .scene-visual.visual-pixel .visual-main span:nth-child(3) { position: static !important; width: auto !important; height: 100% !important; transform: none !important; }
+.question-card .scene-visual.visual-scene { background: linear-gradient(155deg, #e5ebea 0 21%, #9bb5bd 21% 54%, #3f4c51 54% 100%) !important; }
+.question-card .scene-visual.visual-scene::before { content: ''; position: absolute; inset: 0; z-index: 1; background: repeating-linear-gradient(112deg, transparent 0 25px, #e5ebea 25px 27px, transparent 27px 57px); opacity: .48; }
+.question-card .scene-visual.visual-scene::after { content: ''; position: absolute; left: 8%; right: 29%; bottom: 22%; height: 2px; z-index: 1; background: #e5ebea; box-shadow: 80px 13px #e5ebea, 190px 4px #e5ebea; opacity: .7; }
 
 .scene-visual.visual-type .visual-main span:nth-child(1) { left: 0; bottom: 0; width: 48%; height: 53%; background: #d9d9d0; transform: none; }
 .scene-visual.visual-type .visual-main span:nth-child(2) { left: 50%; bottom: 0; width: 50%; height: 34%; background: #7fa8ac; transform: none; }
