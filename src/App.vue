@@ -13,10 +13,10 @@ const questions: ColorQuestion[] = [
   {
     scene: '雨停之後，城市還留著一點濕冷的光。', category: '城市天氣', frame: '以沉靜、帶水氣的藍灰色為底', frameColor: '#526777', layout: 'scene',
     options: [
-      { id: 'rain-1', name: '霧藍', hex: '#9bb5bd' }, { id: 'rain-2', name: '柏油灰', hex: '#3f4c51' }, { id: 'rain-3', name: '苔綠', hex: '#687b6c' }, { id: 'rain-4', name: '雨傘黃', hex: '#d6ad57' },
-      { id: 'rain-5', name: '玻璃白', hex: '#e5ebea' }, { id: 'rain-6', name: '磚紅', hex: '#9c5c50' }, { id: 'rain-7', name: '深夜藍', hex: '#243746' }, { id: 'rain-8', name: '水泥米', hex: '#b4aea0' },
-    ], answer: ['rain-1', 'rain-2', 'rain-3', 'rain-4', 'rain-7'], explanation: '雨天變暗後，街燈與店燈的暖黃成為視線焦點；霧藍、深夜藍與柏油灰建立濕冷城市，苔綠留下潮濕角落的生命感。', reasons: {
-      'rain-1': '符合雨後空氣的濕冷與霧氣。', 'rain-2': '是被雨水打濕、反射光線的柏油路。', 'rain-3': '像城市邊角吸收水氣的苔綠。', 'rain-4': '下雨變暗後亮起的街燈、店燈或傘面暖光。', 'rain-5': '偏向反光材質，不是這題要表現的主要光源。', 'rain-6': '暖度太像磚牆或夕陽，和雨後冷感不一致。', 'rain-7': '代表雨天提早變暗的天空與城市背景。', 'rain-8': '和柏油灰的功能太接近，少了明確的情境差異。',
+      { id: 'rain-1', name: '霧藍', hex: '#9bb5bd' }, { id: 'rain-2', name: '柏油灰', hex: '#3f4c51' }, { id: 'rain-3', name: '苔綠', hex: '#687b6c' }, { id: 'rain-4', name: '暖黃', hex: '#d6ad57' },
+      { id: 'rain-5', name: '玻璃灰', hex: '#c6d0cc' }, { id: 'rain-6', name: '磚紅', hex: '#9c5c50' }, { id: 'rain-7', name: '深夜藍', hex: '#243746' }, { id: 'rain-8', name: '水泥米', hex: '#b4aea0' },
+    ], answer: ['rain-1', 'rain-7', 'rain-2', 'rain-5', 'rain-4'], explanation: '雨天變暗後，暖黃街燈成為城市裡真正的光源；霧藍與深夜藍建立濕冷天空，柏油灰是濕街道，玻璃灰則負責窗面與路面的反射。', reasons: {
+      'rain-1': '符合雨後空氣的濕冷與霧氣。', 'rain-2': '是被雨水打濕、反射光線的柏油路。', 'rain-3': '苔綠可以出現在潮濕城市角落，但不是這個畫面的核心。', 'rain-4': '下雨變暗後亮起的街燈與店燈，是明確的暖色光源。', 'rain-5': '代表窗面與路面的灰色反射，屬於城市材質而非光源。', 'rain-6': '暖度太像磚牆或夕陽，和雨後冷感不一致。', 'rain-7': '代表雨天提早變暗的天空與城市背景。', 'rain-8': '和柏油灰同樣是灰色地面／建築質感，功能太接近。',
     },
   },
   {
