@@ -1,101 +1,114 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { checkDomain, normalizeDomainName, type CheckStatus } from './lib'
 
-const name = ref('')
-const checkedName = ref('')
-const status = ref<CheckStatus>('idle')
+type ColorOption = { id: string; name: string; hex: string }
+type ColorQuestion = {
+  scene: string; category: string; frame: string; frameColor: string
+  options: ColorOption[]; answer: string[]; explanation: string
+}
+type AnswerResult = { selected: string[]; matched: string[] }
 
-const normalizedName = computed(() => normalizeDomainName(name.value))
+const questions: ColorQuestion[] = [
+  {
+    scene: '雨停之後，城市還留著一點濕冷的光。', category: '城市天氣', frame: '以沉靜、帶水氣的藍灰色為底', frameColor: '#526777',
+    options: [
+      { id: 'rain-1', name: '霧藍', hex: '#9bb5bd' }, { id: 'rain-2', name: '柏油灰', hex: '#3f4c51' }, { id: 'rain-3', name: '苔綠', hex: '#687b6c' }, { id: 'rain-4', name: '雨傘黃', hex: '#d6ad57' },
+      { id: 'rain-5', name: '玻璃白', hex: '#e5ebea' }, { id: 'rain-6', name: '磚紅', hex: '#9c5c50' }, { id: 'rain-7', name: '深夜藍', hex: '#243746' }, { id: 'rain-8', name: '水泥米', hex: '#b4aea0' },
+    ], answer: ['rain-1', 'rain-2', 'rain-5'], explanation: '霧藍與柏油灰延續雨後的濕冷質地，再用玻璃白提亮反光的街面，讓整體安靜但不沉重。',
+  },
+  {
+    scene: '凌晨三點，唯一還亮著的便利商店。', category: '深夜記憶', frame: '以人工光源切開深色夜幕', frameColor: '#273044',
+    options: [
+      { id: 'store-1', name: '螢光綠', hex: '#b8d66c' }, { id: 'store-2', name: '夜幕藍', hex: '#202b43' }, { id: 'store-3', name: '冷白光', hex: '#e8eee7' }, { id: 'store-4', name: '番茄紅', hex: '#c45243' },
+      { id: 'store-5', name: '奶茶棕', hex: '#b18d69' }, { id: 'store-6', name: '塑膠橘', hex: '#ed9c4d' }, { id: 'store-7', name: '深紫', hex: '#433c5e' }, { id: 'store-8', name: '薄荷灰', hex: '#9ab3a7' },
+    ], answer: ['store-1', 'store-2', 'store-3'], explanation: '夜幕藍建立凌晨的孤獨感，冷白光是店內不眠的燈，螢光綠則像招牌與貨架上突然跳出的生命力。',
+  },
+  {
+    scene: '夏天海邊，一面被曬熱、帶鹽味的老牆。', category: '夏日場景', frame: '以溫暖日照承接海風的清爽', frameColor: '#d9a45b',
+    options: [
+      { id: 'wall-1', name: '曬熱黃', hex: '#e4b866' }, { id: 'wall-2', name: '海水藍', hex: '#5da5ad' }, { id: 'wall-3', name: '褪色珊瑚', hex: '#d27865' }, { id: 'wall-4', name: '墨黑', hex: '#282b2c' },
+      { id: 'wall-5', name: '葡萄紫', hex: '#72546d' }, { id: 'wall-6', name: '水泥灰', hex: '#8e928c' }, { id: 'wall-7', name: '海藻綠', hex: '#557e71' }, { id: 'wall-8', name: '貝殼白', hex: '#f0e5cf' },
+    ], answer: ['wall-1', 'wall-2', 'wall-3'], explanation: '曬熱黃是老牆吸收的陽光，海水藍帶來鹽味與風，褪色珊瑚像牆面留下的夏日痕跡，三者一起有明亮的復古感。',
+  },
+  {
+    scene: '復古遊戲第一關，音樂剛響起，冒險還沒有開始。', category: '遊戲想像', frame: '以高對比的像素感喚起童年期待', frameColor: '#392b51',
+    options: [
+      { id: 'game-1', name: '像素紫', hex: '#7656a2' }, { id: 'game-2', name: '能量青', hex: '#4fc4bb' }, { id: 'game-3', name: '金幣黃', hex: '#edc44d' }, { id: 'game-4', name: '森林綠', hex: '#47704e' },
+      { id: 'game-5', name: '灰階白', hex: '#d0d1c7' }, { id: 'game-6', name: '警報紅', hex: '#df5f4e' }, { id: 'game-7', name: '泥土棕', hex: '#866044' }, { id: 'game-8', name: '深海藍', hex: '#274f76' },
+    ], answer: ['game-1', 'game-2', 'game-3'], explanation: '像素紫作為懷舊的背景，能量青帶出遊戲介面的電子感，金幣黃則像第一關裡等待被發現的獎勵。',
+  },
+]
 
-const canCheck = computed(() => normalizedName.value.length > 0 && status.value !== 'checking')
+const questionIndex = ref(0)
+const selected = ref<string[]>([])
+const results = ref<AnswerResult[]>([])
+const submitted = ref(false)
+const finished = ref(false)
+const currentQuestion = computed(() => questions[questionIndex.value])
+const currentResult = computed(() => results.value[questionIndex.value])
+const score = computed(() => results.value.reduce((total, result) => total + result.matched.length, 0))
+const maxScore = questions.length * 3
+const selectedOptions = computed(() => currentQuestion.value.options.filter((option) => selected.value.includes(option.id)))
+const colorProfile = computed(() => {
+  if (score.value >= 10) return { title: '情境配色家', note: '你能把文字裡的氣氛，轉成很有方向感的色彩。' }
+  if (score.value >= 7) return { title: '色彩觀察家', note: '你對顏色的情緒與場景聯想很敏銳。' }
+  if (score.value >= 4) return { title: '直覺調色師', note: '你的選擇有自己的個性，再多一點觀察就會更精準。' }
+  return { title: '配色探險者', note: '你願意相信直覺，這正是配色遊戲最有趣的地方。' }
+})
 
-async function handleCheck() {
-  if (!canCheck.value) return
-
-  checkedName.value = normalizedName.value
-  name.value = normalizedName.value
-  status.value = 'checking'
-
-  const result = await checkDomain(checkedName.value)
-
-  if (result.error) status.value = 'error'
-  else status.value = result.available ? 'available' : 'taken'
+function toggleColor(id: string) {
+  if (submitted.value) return
+  if (selected.value.includes(id)) selected.value = selected.value.filter((colorId) => colorId !== id)
+  else if (selected.value.length < 3) selected.value = [...selected.value, id]
+}
+function submitAnswer() {
+  if (selected.value.length !== 3 || submitted.value) return
+  const matched = selected.value.filter((id) => currentQuestion.value.answer.includes(id))
+  results.value[questionIndex.value] = { selected: [...selected.value], matched }
+  submitted.value = true
+}
+function nextQuestion() {
+  if (questionIndex.value === questions.length - 1) { finished.value = true; return }
+  questionIndex.value += 1; selected.value = []; submitted.value = false
+}
+function restartGame() {
+  questionIndex.value = 0; selected.value = []; results.value = []; submitted.value = false; finished.value = false
 }
 </script>
 
 <template>
-  <main>
+  <main class="game-shell">
     <nav aria-label="Main navigation">
-      <a class="brand" href="./" aria-label="Namecheck home">
-        <span class="brand-mark">N</span>
-        <span>namecheck</span>
-      </a>
-      <a class="nav-link" href="https://github.com" target="_blank" rel="noreferrer">
-        Built with Vue <span aria-hidden="true">↗</span>
-      </a>
+      <a class="brand" href="./" aria-label="Mood Match home" @click.prevent="restartGame"><span class="brand-mark"><span></span><span></span><span></span></span><span>mood match</span></a>
+      <span class="nav-note">A small color intuition game</span>
     </nav>
 
-    <section class="hero">
-      <p class="eyebrow"><span></span> Your next idea starts here</p>
-      <h1>Find a name<br /><em>worth remembering.</em></h1>
-      <p class="intro">
-        Check whether the perfect <strong>.com</strong> for your next project is still out there.
-      </p>
+    <section v-if="!finished" class="game-area">
+      <header class="game-header">
+        <div><p class="eyebrow"><span></span> Color mood quiz</p><h1>把情境，<em>配成顏色。</em></h1><p class="intro">每一題都有一個色彩框架。從 8 個色塊中選出 3 個，拼出你認為最符合情境的配色。</p></div>
+        <div class="progress" aria-label="Game progress"><span>ROUND</span><strong>{{ String(questionIndex + 1).padStart(2, '0') }}<small> / {{ String(questions.length).padStart(2, '0') }}</small></strong></div>
+      </header>
 
-      <form class="search" @submit.prevent="handleCheck">
-        <label class="sr-only" for="domain">Domain name</label>
-        <input
-          id="domain"
-          v-model="name"
-          type="text"
-          inputmode="url"
-          autocomplete="off"
-          maxlength="63"
-          placeholder="your-brilliant-idea"
-          aria-describedby="domain-suffix"
-          @input="status = 'idle'"
-        />
-        <span id="domain-suffix" class="suffix">.com</span>
-        <button type="submit" :disabled="!canCheck">
-          <span>{{ status === 'checking' ? 'Checking' : 'Check it' }}</span>
-          <span v-if="status === 'checking'" class="spinner" aria-hidden="true"></span>
-          <span v-else aria-hidden="true">→</span>
-        </button>
-      </form>
-
-      <div class="result-wrap" aria-live="polite">
-        <article v-if="status === 'available'" class="result available">
-          <span class="result-icon">✓</span>
-          <div>
-            <p>Good news — it’s available</p>
-            <strong>{{ checkedName }}.com</strong>
-          </div>
-          <a :href="`https://www.google.com/search?q=register+${checkedName}.com`" target="_blank" rel="noreferrer">Find a registrar ↗</a>
-        </article>
-
-        <article v-else-if="status === 'taken'" class="result taken">
-          <span class="result-icon">×</span>
-          <div>
-            <p>This one is already registered</p>
-            <strong>{{ checkedName }}.com</strong>
-          </div>
-          <span class="try-again">Try another name</span>
-        </article>
-
-        <article v-else-if="status === 'error'" class="result error">
-          <span class="result-icon">!</span>
-          <div>
-            <p>We couldn’t verify that domain</p>
-            <strong>Please wait a moment and try again.</strong>
-          </div>
-        </article>
-      </div>
+      <article class="question-card" :style="{ '--frame-color': currentQuestion.frameColor }">
+        <div class="question-meta"><span>{{ currentQuestion.category }}</span><span>選 3 個色塊</span></div>
+        <h2>{{ currentQuestion.scene }}</h2>
+        <p class="frame-hint"><i :style="{ backgroundColor: currentQuestion.frameColor }"></i>{{ currentQuestion.frame }}</p>
+        <div class="palette-preview" aria-label="Your selected palette"><div v-for="slot in 3" :key="slot" class="palette-slot" :class="{ filled: selectedOptions[slot - 1] }"><span v-if="selectedOptions[slot - 1]" :style="{ backgroundColor: selectedOptions[slot - 1].hex }"></span><small v-else>0{{ slot }}</small></div></div>
+        <div class="color-grid" role="group" aria-label="Color choices">
+          <button v-for="option in currentQuestion.options" :key="option.id" class="color-choice" :class="{ selected: selected.includes(option.id), muted: submitted && !selected.includes(option.id) }" type="button" :aria-label="`${option.name}${selected.includes(option.id) ? '，已選取' : ''}`" :aria-pressed="selected.includes(option.id)" @click="toggleColor(option.id)"><span class="color-circle" :style="{ backgroundColor: option.hex }"><b v-if="selected.includes(option.id)">{{ selected.indexOf(option.id) + 1 }}</b></span><span>{{ option.name }}</span></button>
+        </div>
+        <div v-if="!submitted" class="action-row"><span>{{ selected.length }} / 3 selected</span><button class="primary-button" type="button" :disabled="selected.length !== 3" @click="submitAnswer">完成配色 <b>→</b></button></div>
+        <div v-else class="feedback" aria-live="polite"><div><strong>{{ currentResult.matched.length }} / 3 個配色方向符合</strong><p>{{ currentQuestion.explanation }}</p></div><button class="primary-button" type="button" @click="nextQuestion">{{ questionIndex === questions.length - 1 ? '查看結果' : '下一題' }} <b>→</b></button></div>
+      </article>
     </section>
 
-    <footer>
-      <p>Free to use. No sign-up. No tracking.</p>
-      <p>Availability provided by public RDAP data.</p>
-    </footer>
+    <section v-else class="result-page">
+      <p class="eyebrow"><span></span> Your color story</p><h1>你的配色，<em>有自己的氣候。</em></h1>
+      <div class="final-score"><strong>{{ score }}</strong><span>/ {{ maxScore }} colors matched</span></div>
+      <p class="profile-title">{{ colorProfile.title }}</p><p class="intro result-intro">{{ colorProfile.note }} 四題結束後，你總共找到了 {{ score }} 個符合情境的顏色方向。</p>
+      <div class="answer-list"><article v-for="(result, index) in results" :key="index" class="answer-row"><div class="answer-number">0{{ index + 1 }}</div><div class="answer-copy"><strong>{{ questions[index].scene }}</strong><p>{{ questions[index].explanation }}</p></div><div class="mini-palette"><i v-for="colorId in result.selected" :key="colorId" :style="{ backgroundColor: questions[index].options.find((option) => option.id === colorId)?.hex }"></i></div><span class="match-count">{{ result.matched.length }}/3</span></article></div>
+      <button class="primary-button restart" type="button" @click="restartGame">再玩一次 <b>↗</b></button>
+    </section>
+    <footer><span>Four scenes · Twelve color directions</span><span>Trust your eye</span></footer>
   </main>
 </template>
