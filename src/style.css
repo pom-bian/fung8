@@ -22,6 +22,20 @@ footer { display: flex; justify-content: space-between; padding: 22px 0 28px; bo
 @media (max-width: 700px) { .game-shell { padding: 0 21px; } nav { height: 76px; }.nav-note { display: none; }.game-area, .result-page { padding: 45px 0 55px; }.game-header { align-items: start; margin-bottom: 30px; }.game-header .intro { font-size: .9rem; }.progress { padding-top: 6px; }.progress strong { font-size: 2rem; }.question-card { padding: 25px 18px 27px; }.question-card h2 { font-size: 1.5rem; }.color-grid { grid-template-columns: repeat(4, 1fr); gap: 20px 8px; }.color-circle { width: min(17vw, 61px); }.action-row, .feedback { align-items: stretch; flex-direction: column; }.action-row { gap: 15px; }.primary-button { width: 100%; }.feedback p { margin-bottom: 15px; }.answer-row { grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; }.mini-palette { grid-column: 2; }.match-count { grid-column: 3; grid-row: 1; }.answer-copy p { font-size: .7rem; } footer { line-height: 1.8; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
 
+/* Simplified answer artwork: only the three correct color areas remain visible. */
+.question-card .scene-visual .visual-texture, .question-card .scene-visual .visual-label { display: none !important; }
+.question-card .scene-visual.visual-type::before, .question-card .scene-visual.visual-type::after, .question-card .scene-visual.visual-pixel::before { display: none !important; }
+.question-card .scene-visual.visual-type { background: linear-gradient(#bfc1bb 0 52%, #8e9b9b 52% 68%, #9a978d 68%) !important; }
+.question-card .scene-visual.visual-type .visual-main { background: transparent !important; opacity: 1 !important; }
+.question-card .scene-visual.visual-type .visual-main span:nth-child(1) { left: 0 !important; bottom: 0 !important; width: 52% !important; height: 100% !important; transform: none !important; }
+.question-card .scene-visual.visual-type .visual-main span:nth-child(2) { left: 52% !important; bottom: 0 !important; width: 48% !important; height: 36% !important; transform: none !important; }
+.question-card .scene-visual.visual-type .visual-main span:nth-child(3) { left: 73% !important; top: 18% !important; width: 20% !important; height: 14% !important; transform: none !important; }
+.question-card .scene-visual.visual-pixel { background-color: #bfc2bd !important; background-image: linear-gradient(#dfe0d9 1px, transparent 1px), linear-gradient(90deg, #dfe0d9 1px, transparent 1px) !important; }
+.question-card .scene-visual.visual-pixel .visual-main { inset: 22px 20% 18px !important; border-color: #555b5d !important; background: #8c9390 !important; box-shadow: none !important; }
+.question-card .scene-visual.visual-pixel .visual-main span:nth-child(1) { left: 21% !important; bottom: 22% !important; width: 16px !important; height: 38% !important; box-shadow: 14px -12px #8c9390, 28px 1px #8c9390, 14px 15px #8c9390 !important; }
+.question-card .scene-visual.visual-pixel .visual-main span:nth-child(2) { right: 17% !important; top: 17% !important; width: 22% !important; height: 22% !important; box-shadow: none !important; }
+.question-card .scene-visual.visual-pixel .visual-main span:nth-child(3) { left: 8% !important; bottom: 8% !important; width: 22% !important; height: 8px !important; box-shadow: 35px 0 #8c9390, 70px 0 #8c9390 !important; }
+
 .scene-visual.visual-type .visual-main span:nth-child(1) { left: 0; bottom: 0; width: 48%; height: 53%; background: #d9d9d0; transform: none; }
 .scene-visual.visual-type .visual-main span:nth-child(2) { left: 50%; bottom: 0; width: 50%; height: 34%; background: #7fa8ac; transform: none; }
 .scene-visual.visual-type .visual-main span:nth-child(3) { left: 74%; top: 58%; width: 16%; height: 8%; background: #d17c68; transform: rotate(-8deg); }

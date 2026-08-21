@@ -94,8 +94,6 @@ function restartGame() {
         <div class="question-meta"><span>{{ currentQuestion.category }}</span><span>選 3 個色塊</span></div>
         <div v-if="submitted" class="scene-visual" :class="`visual-${currentQuestion.layout}`" aria-label="本題解答圖片">
           <div class="visual-main"><span :style="{ backgroundColor: answerColors[0] }"></span><span :style="{ backgroundColor: answerColors[1] }"></span><span :style="{ backgroundColor: answerColors[2] }"></span><span></span><span></span></div>
-          <div class="visual-texture"><i></i><i></i><i></i></div>
-          <b class="visual-label">{{ String(questionIndex + 1).padStart(2, '0') }}</b>
         </div>
         <h2>{{ currentQuestion.scene }}</h2>
         <p class="frame-hint"><i :style="{ backgroundColor: currentQuestion.frameColor }"></i>{{ currentQuestion.frame }}</p>
