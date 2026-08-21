@@ -42,6 +42,7 @@ const questions: ColorQuestion[] = [
 
 const questionIndex = ref(0)
 const selected = ref<string[]>([])
+const zoneColors = ref<string[]>([])
 const results = ref<AnswerResult[]>([])
 const submitted = ref(false)
 const finished = ref(false)
@@ -49,7 +50,6 @@ const currentQuestion = computed(() => questions[questionIndex.value])
 const currentResult = computed(() => results.value[questionIndex.value])
 const score = computed(() => results.value.reduce((total, result) => total + result.matched.length, 0))
 const maxScore = questions.length * 3
-const selectedOptions = computed(() => currentQuestion.value.options.filter((option) => selected.value.includes(option.id)))
 const colorProfile = computed(() => {
   if (score.value >= 10) return { title: '情境配色家', note: '你能把文字裡的氣氛，轉成很有方向感的色彩。' }
   if (score.value >= 7) return { title: '色彩觀察家', note: '你對顏色的情緒與場景聯想很敏銳。' }
@@ -57,10 +57,13 @@ const colorProfile = computed(() => {
   return { title: '配色探險者', note: '你願意相信直覺，這正是配色遊戲最有趣的地方。' }
 })
 
-function toggleColor(id: string) {
-  if (submitted.value) return
-  if (selected.value.includes(id)) selected.value = selected.value.filter((colorId) => colorId !== id)
-  else if (selected.value.length < 3) selected.value = [...selected.value, id]
+function applyColor(option: ColorOption) {
+  if (submitted.value || selected.value.length >= 3 || selected.value.includes(option.id)) return
+  selected.value = [...selected.value, option.id]
+  zoneColors.value = [...zoneColors.value, option.hex]
+}
+function zoneStyle(index: number) {
+  return { backgroundColor: zoneColors.value[index] ?? '#b9bbb5' }
 }
 function submitAnswer() {
   if (selected.value.length !== 3 || submitted.value) return
@@ -70,10 +73,10 @@ function submitAnswer() {
 }
 function nextQuestion() {
   if (questionIndex.value === questions.length - 1) { finished.value = true; return }
-  questionIndex.value += 1; selected.value = []; submitted.value = false
+  questionIndex.value += 1; selected.value = []; zoneColors.value = []; submitted.value = false
 }
 function restartGame() {
-  questionIndex.value = 0; selected.value = []; results.value = []; submitted.value = false; finished.value = false
+  questionIndex.value = 0; selected.value = []; zoneColors.value = []; results.value = []; submitted.value = false; finished.value = false
 }
 </script>
 
@@ -93,17 +96,16 @@ function restartGame() {
       <article class="question-card" :style="{ '--frame-color': currentQuestion.frameColor }">
         <div class="question-meta"><span>{{ currentQuestion.category }}</span><span>選 3 個色塊</span></div>
         <div class="scene-visual" :class="`visual-${currentQuestion.layout}`" aria-hidden="true">
-          <div class="visual-main"><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="visual-main"><span class="zone-fill" :style="zoneStyle(0)"></span><span class="zone-fill" :style="zoneStyle(1)"></span><span class="zone-fill" :style="zoneStyle(2)"></span><span></span><span></span></div>
           <div class="visual-texture"><i></i><i></i><i></i></div>
           <b class="visual-label">{{ String(questionIndex + 1).padStart(2, '0') }}</b>
         </div>
         <h2>{{ currentQuestion.scene }}</h2>
         <p class="frame-hint"><i :style="{ backgroundColor: currentQuestion.frameColor }"></i>{{ currentQuestion.frame }}</p>
-        <div class="palette-preview" aria-label="Your selected palette"><div v-for="slot in 3" :key="slot" class="palette-slot" :class="{ filled: selectedOptions[slot - 1] }"><span v-if="selectedOptions[slot - 1]" :style="{ backgroundColor: selectedOptions[slot - 1].hex }"></span><small v-else>0{{ slot }}</small></div></div>
         <div class="color-grid" role="group" aria-label="Color choices">
-          <button v-for="(option, optionIndex) in currentQuestion.options" :key="option.id" class="color-choice" :class="{ selected: selected.includes(option.id), muted: submitted && !selected.includes(option.id) }" type="button" :aria-label="`色塊 ${optionIndex + 1}${selected.includes(option.id) ? '，已選取' : ''}`" :aria-pressed="selected.includes(option.id)" @click="toggleColor(option.id)"><span class="color-circle" :style="{ backgroundColor: option.hex }"><b v-if="selected.includes(option.id)">{{ selected.indexOf(option.id) + 1 }}</b></span></button>
+          <button v-for="(option, optionIndex) in currentQuestion.options" :key="option.id" class="color-choice" :class="{ selected: selected.includes(option.id), muted: submitted || selected.includes(option.id) }" type="button" :aria-label="`色塊 ${optionIndex + 1}${selected.includes(option.id) ? '，已使用' : ''}`" :aria-pressed="selected.includes(option.id)" :disabled="submitted || selected.includes(option.id)" @click="applyColor(option)"><span class="color-circle" :style="{ backgroundColor: option.hex }"><b v-if="selected.includes(option.id)">{{ selected.indexOf(option.id) + 1 }}</b></span></button>
         </div>
-        <div v-if="!submitted" class="action-row"><span>{{ selected.length }} / 3 selected</span><button class="primary-button" type="button" :disabled="selected.length !== 3" @click="submitAnswer">完成配色 <b>→</b></button></div>
+        <div v-if="!submitted" class="action-row"><span>{{ selected.length < 3 ? `請為第 ${selected.length + 1} 個區塊選色` : '三個區塊已完成' }}</span><button class="primary-button" type="button" :disabled="selected.length !== 3" @click="submitAnswer">完成配色 <b>→</b></button></div>
         <div v-else class="feedback" aria-live="polite"><div><strong>{{ currentResult.matched.length }} / 3 個配色方向符合</strong><p>{{ currentQuestion.explanation }}</p></div><button class="primary-button" type="button" @click="nextQuestion">{{ questionIndex === questions.length - 1 ? '查看結果' : '下一題' }} <b>→</b></button></div>
       </article>
     </section>
